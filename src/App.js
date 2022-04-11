@@ -1,6 +1,13 @@
 import { useState } from 'react';
 import './App.css';
 import firebase from 'firebase';
+import ResNetPredictor from 'resnet_imagenet';
+  
+const run = async (inputUrl) => {
+    const predictor = await ResNetPredictor.create();
+    const prediction = await predictor.classify(inputUrl);
+    return prediction;
+}
 
 const firebaseConfig = {
   apiKey: "AIzaSyCor0T-Q5ZovS59WNJMO4eV50lMYB97JgU",
@@ -16,23 +23,19 @@ const storage = firebase.storage();
 function App() {
   const [image, setImage] = useState('');
   const [imgurl, setImgurl] = useState(''); 
+  const [result, setResult] = useState(''); 
   const fileSelectedHandler = (e) => {
     setImage(e.target.files[0])
   }
-
   
   const fileUploadHandler = () => {
 
       const name="123"+Date.now();
   
-      // make ref to your firebase storage and select images folder
       const storageRef = storage.ref('/images/'+ name);
   
-      // put file to firebase 
       const uploadTask = storageRef.put(image);
   
-      // all working for progress bar that in html
-      // to indicate image uploading... report
       uploadTask.on('state_changed', function(snapshot){
         const progress = 
          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
@@ -55,6 +58,10 @@ function App() {
             console.log('File available at', downloadURL);
             setImgurl(downloadURL);  
            console.log(downloadURL);
+           if(downloadURL) {
+              let predictionResult = run(downloadURL);
+              setResult(predictionResult);
+           }
           document.getElementById('submit_link').removeAttribute('disabled');
         });
       });
@@ -73,6 +80,12 @@ function App() {
        <button id='submit_link' onClick={fileUploadHandler}>Upload</button>
        {  imgurl &&
         <img className='image-preview' src={imgurl} alt="img" />
+       }
+       {
+          result &&
+          <div className='result-display'>
+            {result}
+          </div>
        }
     </div>
   );
