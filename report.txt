@@ -1,0 +1,8 @@
+Yash Maheshwari 
+
+Assignment for Engineering at Qure.ai
+
+I have created a PWA which takes an image file from the user and uses the ResNet50 model pre-trained on imagenet for TensorFlow.js as a layers model. This then responds with an output which is displayed on the screen. 
+The PWA is made in React and the images uploaded by the user are also saved on firebase storage through an API. 
+ResNet-50 model used is a convolutional neural network that is 50 layers deep. We can load a pre-trained version of the network trained on more than a million images from the ImageNet database. The pretrained network can classify images into 1000 object categories, such as keyboard, mouse, pencil, and many animals. 
+As a result, the network has learned rich feature representations for a wide range of images. Once the image is uploaded and stored in firebase the image the resnet image predictor function is called and the predicted output is displayed on the screen. Thus this becomes a reasonably accurate google lens alternative!
